@@ -11,15 +11,17 @@ def curso(self):
     texto= f"Curso: {curso.nombre} comision: {curso.comision}"
     return HttpResponse(texto)
 
+    
+
 
 def inicio(request):
     return render(request, 'AppCoder/inicio.html')
 
 def profesores(request):
-    return HttpResponse("esta es la pagina de profesores")
+    return render(request, 'AppCoder/profesores.html')
 
 def estudiantes(request):
-    return HttpResponse("esta es la pagina de estudiantes")
+    return render(request, 'AppCoder/estudiantes.html')
 
 def cursos(request):
     return HttpResponse("esta es la pagina de cursos")
