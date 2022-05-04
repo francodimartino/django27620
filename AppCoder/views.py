@@ -24,7 +24,7 @@ def estudiantes(request):
     return render(request, 'AppCoder/estudiantes.html')
 
 def cursos(request):
-    return HttpResponse("esta es la pagina de cursos")
+    return render(request, 'AppCoder/cursos.html')
 
 def entregables(request):
-    return HttpResponse("esta es la pagina de entregables")
+    return render(request, 'AppCoder/entregables.html')
