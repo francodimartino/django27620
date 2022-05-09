@@ -4,7 +4,19 @@
 
 {% block contenidoQueCambia %}
 
-<h1>ESTE ES EL CONTENIDO QUE CAMBIO!</h1>
+<h1>listado de profes 27620</h1>
+
+{% for profesor in profesores %}
+
+<li>{{ profesor }}</li>
+<button>
+    <a href="{% url 'eliminarProfesor' profesor.nombre  %}"> Eliminar</a>
+</button>
+<button>
+    <a href="{% url 'editarProfesor' profesor.nombre  %}"> Editar</a>
+</button>
+
+{% endfor %}
 
 {% endblock %}
 
