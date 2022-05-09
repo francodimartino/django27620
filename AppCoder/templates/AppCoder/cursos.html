@@ -4,7 +4,24 @@
 
 {% block contenidoQueCambia %}
 
-<h1>ESTE ES EL CONTENIDO QUE CAMBIO!</h1>
+
+{% if formulario.errors %}
+
+<p style="color:red;">CHE, HAY ALGO MAL</p>
+
+    
+{% endif %}
+
+
+<form action="{% url 'cursos' %}" method="post">{% csrf_token %}
+
+    <table>
+        {{ formulario.as_table}}
+    </table>
+    <input type="submit" value="Enviar Formulario hecho en API">
+
+</form>
+
 
 {% endblock %}
 
