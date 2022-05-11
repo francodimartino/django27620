@@ -1,0 +1,22 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<form method="post">{% csrf_token %}
+
+    {{ formulario.as_p}}
+    <input type="submit" value="INICIAR SESION">
+
+</form>
+
+<h2>{{mensaje}}</h2>
+
+{% endblock %}
+
+{% block titulo %}
+
+    <h1 >LOGIN</h1>
+
+{% endblock %}
