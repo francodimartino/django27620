@@ -1,9 +1,9 @@
 from django import http
 from django.shortcuts import render
 
-from .models import Curso, Estudiante, Profesor, Entregable
+from .models import Curso, Estudiante, Profesor, Entregable, Avatar
 from django.http import HttpResponse
-from AppCoder.forms import CursoFormulario, ProfeFormulario, UserRegistrationForm
+from AppCoder.forms import CursoFormulario, ProfeFormulario, UserRegistrationForm, UserEditForm, AvatarForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -11,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -24,7 +25,9 @@ def curso(self):
 
 
 def inicio(request):
-    return render(request, 'AppCoder/inicio.html')
+
+    avatar=Avatar.objects.filter(user=request.user)
+    return render(request, 'AppCoder/inicio.html' ,{'url': avatar[0].avatar.url})
 
 def profesores(request):
     return render(request, 'AppCoder/profesores.html')
@@ -184,7 +187,43 @@ def register(request):
         formulario = UserRegistrationForm()
         return render(request, 'AppCoder/register.html', {'formulario':formulario})
 
+#-------------------------------------------------------------------
 
 
+@login_required
+def editarPerfil(request):
+    usuario=request.user
+
+    if request.method == 'POST':
+        formulario=UserEditForm(request.POST, instance=usuario)
+        if formulario.is_valid():
+            informacion=formulario.cleaned_data
+            usuario.email=informacion['email']
+            usuario.password1=informacion['password1']
+            usuario.password2=informacion['password2']
+            usuario.save()
+
+            return render(request, 'AppCoder/inicio.html', {'usuario':usuario, 'mensaje':'PERFIL EDITADO EXITOSAMENTE'})
+    else:
+        formulario=UserEditForm(instance=usuario)
+    return render(request, 'AppCoder/editarPerfil.html', {'formulario':formulario, 'usuario':usuario.username})
+
+#-------------------------------------------------------------------
 
 
+@login_required
+def agregarAvatar(request):
+    user=User.objects.get(username=request.user)
+    if request.method == 'POST':
+        formulario=AvatarForm(request.POST, request.FILES)
+        if formulario.is_valid():
+
+            avatarViejo=Avatar.objects.get(user=request.user)
+            if(avatarViejo.avatar):
+                avatarViejo.delete()
+            avatar=Avatar(user=user, avatar=formulario.cleaned_data['avatar'])
+            avatar.save()
+            return render(request, 'AppCoder/inicio.html', {'usuario':user, 'mensaje':'AVATAR AGREGADO EXITOSAMENTE'})
+    else:
+        formulario=AvatarForm()
+    return render(request, 'AppCoder/agregarAvatar.html', {'formulario':formulario, 'usuario':user})
